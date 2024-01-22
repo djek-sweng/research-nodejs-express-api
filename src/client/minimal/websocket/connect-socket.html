@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Connect Socket</title>
+  </head>
+  <body>
+    <ul>
+      <li>
+        <a href="./../index.html">Back</a>
+      </li>
+    </ul>
+    <h1>Connect Socket</h1>
+    <script src="./socket.io.js"></script>
+    <script>
+      "use strict";
+
+      const _BASE_URL = "http://localhost:3000";
+
+      const socket = io(_BASE_URL);
+
+      const connectSocket = () => {
+        socket.on("connect", () => {
+          console.log("connect client socket to server io");
+          console.log(socket.id);
+        });
+
+        socket.on("notes", (data) => {
+          const d = data[0];
+
+          switch (d.action) {
+            case "created":
+              console.log("note created");
+              break;
+            case "updated":
+              console.log("note updated");
+              break;
+            case "deleted":
+              console.log("note deleted");
+              break;
+            default:
+              console.log("note unknown action");
+              break;
+          }
+
+          console.log(data);
+        });
+      };
+
+      const onInit = () => {
+        connectSocket();
+        alert("Open console now!");
+      };
+
+      onInit();
+    </script>
+  </body>
+</html>

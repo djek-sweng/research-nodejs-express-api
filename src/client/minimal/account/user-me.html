@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>User Me</title>
+  </head>
+  <body>
+    <ul>
+      <li>
+        <a href="./../index.html">Back</a>
+      </li>
+    </ul>
+    <h1>User Me</h1>
+    <div>
+      <div>
+        <label for="id">Id</label>
+        <input type="status" id="id" disabled />
+      </div>
+      <div>
+        <label for="name">Name</label>
+        <input type="text" id="name" disabled />
+      </div>
+      <div>
+        <label for="email">Email</label>
+        <input type="email" id="email" disabled />
+      </div>
+      <div>
+        <label for="status">Status</label>
+        <input type="text" id="status" />
+      </div>
+      <button onclick="onClickGet()">Get</button>
+      <button onclick="onClickSetStatus()">Set Status</button>
+    </div>
+    <script>
+      "use strict";
+
+      const _BASE_URL = "http://localhost:3000";
+
+      const _id = document.getElementById("id");
+      const _name = document.getElementById("name");
+      const _email = document.getElementById("email");
+      const _status = document.getElementById("status");
+
+      const onInit = () => {
+        onClickGet();
+      };
+
+      const onClickGet = async () => {
+        try {
+          const token = localStorage.getItem("access_token");
+
+          const res = await fetch(`${_BASE_URL}/account/user/me`, {
+            method: "GET",
+            headers: { Authorization: "Bearer " + token },
+          });
+
+          const data = await res.json();
+
+          if (!res.ok) {
+            alert(JSON.stringify(data));
+            return;
+          }
+
+          const user = data.entity;
+
+          _id.value = user._id;
+          _name.value = user.name;
+          _email.value = user.email;
+          _status.value = user.status;
+        } catch (err) {
+          console.error(err);
+        }
+      };
+
+      const onClickSetStatus = async () => {
+        try {
+          const token = localStorage.getItem("access_token");
+
+          const payload = {
+            status: _status.value,
+          };
+
+          const res = await fetch(`${_BASE_URL}/account/user/me/status`, {
+            method: "POST",
+            headers: {
+              Authorization: "Bearer " + token,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(payload),
+          });
+
+          const data = await res.json();
+
+          if (!res.ok) {
+            alert(JSON.stringify(data));
+            return;
+          }
+
+          const user = data.entity;
+
+          _name.value = user.name;
+          _email.value = user.email;
+          _status.value = user.status;
+          _id.value = user._id;
+        } catch (err) {
+          console.error(err);
+        }
+      };
+
+      onInit();
+    </script>
+  </body>
+</html>

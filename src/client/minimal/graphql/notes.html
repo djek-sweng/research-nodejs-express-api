@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GraphQL Notes</title>
+  </head>
+  <body>
+    <ul>
+      <li>
+        <a href="./../index.html">Back</a>
+      </li>
+    </ul>
+    <h1>GraphQL Notes</h1>
+    <div>
+      <div>
+        <label for="page">Page</label>
+        <input type="text" id="page" value="1" />
+      </div>
+      <button onclick="onClick()">Query Notes</button>
+    </div>
+    <div>
+      <section id="section">
+        <!-- GraphQL data will be dynamically added here. -->
+      </section>
+    </div>
+    <script>
+      "use strict";
+
+      const _BASE_URL = "http://localhost:3000";
+
+      const _page = document.getElementById("page");
+
+      const onInit = () => {};
+
+      const onClick = async () => {
+        try {
+          const token = localStorage.getItem("access_token");
+
+          const headers = new Headers();
+          headers.append("Content-Type", "application/json");
+          headers.append("Authorization", "Bearer " + token);
+
+          const body = JSON.stringify({
+            query: `query NotesQuery($page: Int!) {
+              notes(page: $page) {
+                totalCount
+                entries {
+                  _id
+                  title
+                  content
+                  imageUrl
+                  owner { name email }
+                  createdAt
+                  updatedAt
+                }
+                pagination { current previous next first last }
+              }
+            }`,
+            variables: { page: +_page.value },
+          });
+
+          const options = {
+            method: "POST",
+            headers: headers,
+            body: body,
+            redirect: "follow",
+          };
+
+          const res = await fetch("http://localhost:3000/graphql", options);
+
+          const data = await res.json();
+
+          if (!res.ok) {
+            alert(JSON.stringify(data));
+            return;
+          }
+
+          addRow(data);
+        } catch (err) {
+          console.error(err);
+        }
+      };
+
+      const addRow = (data) => {
+        const section = document.getElementById("section");
+
+        section.innerHTML = JSON.stringify(data);
+      };
+
+      onInit();
+    </script>
+  </body>
+</html>

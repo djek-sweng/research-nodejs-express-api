@@ -1,0 +1,40 @@
+{
+  "name": "nodejs-express-api",
+  "version": "1.0.0",
+  "description": "Node.js Express API (Authorization Bearer, MongoDB, Socket.IO, GraphQL)",
+  "main": "app.js",
+  "scripts": {
+    "lint": "npx eslint .",
+    "test": "dotenv | mocha ./test --timeout 4000",
+    "start": "dotenv | node app.js",
+    "start:dev": "dotenv | nodemon app.js"
+  },
+  "author": "djek-sweng",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "bluebird": "^3.7.2",
+    "body-parser": "^1.20.2",
+    "compression": "^1.7.4",
+    "dotenv": "^16.3.2",
+    "express": "^4.18.2",
+    "express-validator": "^7.0.1",
+    "graphql": "^16.8.1",
+    "graphql-http": "^1.22.0",
+    "helmet": "^7.1.0",
+    "http-status-codes": "^2.3.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.1.0",
+    "morgan": "^1.10.0",
+    "multer": "^1.4.5-lts.1",
+    "socket.io": "^4.7.4",
+    "uuid": "^9.0.1"
+  },
+  "devDependencies": {
+    "chai": "^5.0.0",
+    "eslint": "^8.56.0",
+    "mocha": "^10.2.0",
+    "nodemon": "^3.0.3",
+    "sinon": "^17.0.1"
+  }
+}

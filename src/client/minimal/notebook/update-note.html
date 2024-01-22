@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Update Note</title>
+  </head>
+  <body>
+    <ul>
+      <li>
+        <a href="./../index.html">Back</a>
+      </li>
+    </ul>
+    <h1>Update Note</h1>
+    <div>
+      <div>
+        <label for="title">Title</label>
+        <input type="text" id="title" />
+      </div>
+      <div>
+        <label for="content">Content</label>
+        <input type="text" id="content" />
+      </div>
+      <div>
+        <label for="image">Image</label>
+        <input type="file" id="image" />
+      </div>
+      <div>
+        <label for="id">Id</label>
+        <input type="text" id="id" disabled />
+      </div>
+      <div>
+        <label for="owner">Owner</label>
+        <input type="text" id="owner" disabled />
+      </div>
+      <button onclick="onClick()">Update</button>
+    </div>
+    <script>
+      "use strict";
+
+      const _BASE_URL = "http://localhost:3000";
+
+      const _title = document.getElementById("title");
+      const _content = document.getElementById("content");
+      const _image = document.getElementById("image");
+      const _id = document.getElementById("id");
+      const _owner = document.getElementById("owner");
+
+      const onInit = async () => {
+        try {
+          const token = localStorage.getItem("access_token");
+
+          const res = await fetch(`${_BASE_URL}/notebook/notes`, {
+            method: "GET",
+            headers: { Authorization: "Bearer " + token },
+          });
+
+          const data = await res.json();
+
+          if (!res.ok) {
+            alert(JSON.stringify(data));
+            return;
+          }
+
+          const note = data.entity[0];
+
+          if (!note) {
+            alert("No posts found. Create note first.");
+            return;
+          }
+
+          _title.value = note.title;
+          _content.value = note.content;
+          _id.value = note._id;
+          _owner.value = note.owner;
+        } catch (err) {
+          console.error(err);
+        }
+      };
+
+      const onClick = async () => {
+        try {
+          const formData = new FormData();
+
+          formData.append("title", _title.value);
+          formData.append("content", _content.value);
+          formData.append("image", _image.files[0]);
+
+          const token = localStorage.getItem("access_token");
+
+          const res = await fetch(`${_BASE_URL}/notebook/notes/${_id.value}`, {
+            method: "PUT",
+            headers: { Authorization: "Bearer " + token },
+            body: formData,
+          });
+
+          const data = await res.json();
+
+          if (!res.ok) {
+            alert(JSON.stringify(data));
+            return;
+          }
+
+          await onInit();
+        } catch (err) {
+          console.error(err);
+        }
+      };
+
+      onInit();
+    </script>
+  </body>
+</html>
