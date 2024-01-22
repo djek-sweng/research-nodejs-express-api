@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Signup</title>
+  </head>
+  <body>
+    <ul>
+      <li>
+        <a href="./../index.html">Back</a>
+      </li>
+    </ul>
+    <h1>Signup</h1>
+    <div>
+      <div>
+        <label for="name">Name</label>
+        <input type="text" id="name" value="Foo" />
+      </div>
+      <div>
+        <label for="email">Email</label>
+        <input type="email" id="email" value="Foo@email.com" />
+      </div>
+      <div>
+        <label for="password">Password</label>
+        <input type="password" id="password" />
+      </div>
+      <div>
+        <label for="confirmPassword">Confirm Password</label>
+        <input type="password" id="confirmPassword" />
+      </div>
+      <button onclick="onClickSignup()">Signup</button>
+    </div>
+    <script>
+      "use strict";
+
+      const _BASE_URL = "http://localhost:3000";
+
+      const _name = document.getElementById("name");
+      const _email = document.getElementById("email");
+      const _password = document.getElementById("password");
+      const _confirmPassword = document.getElementById("confirmPassword");
+
+      const onInit = () => {};
+
+      const onClickSignup = async () => {
+        try {
+          const payload = {
+            name: _name.value,
+            email: _email.value,
+            password: _password.value,
+            confirmPassword: _confirmPassword.value,
+          };
+
+          const res = await fetch(`${_BASE_URL}/account/signup`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+          });
+
+          const data = await res.json();
+
+          if (!res.ok) {
+            alert(JSON.stringify(data));
+            return;
+          }
+
+          _name.value = "";
+          _email.value = "";
+          _password.value = "";
+          _confirmPassword.value = "";
+
+          localStorage.clear();
+
+          alert("Login now!");
+        } catch (err) {
+          console.error(err);
+        }
+      };
+
+      onInit();
+    </script>
+  </body>
+</html>

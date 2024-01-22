@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Notes</title>
+    <style>
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+      }
+      table,
+      th,
+      td {
+        border: 1px solid #ddd;
+      }
+      th,
+      td {
+        padding: 10px;
+        text-align: left;
+      }
+      th {
+        background-color: #f2f2f2;
+      }
+    </style>
+  </head>
+  <body>
+    <ul>
+      <li>
+        <a href="./../index.html">Back</a>
+      </li>
+    </ul>
+    <h1>Notes</h1>
+    <table id="table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Id</th>
+          <th>Title</th>
+          <th>Content</th>
+          <th>Owner</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Table data will be dynamically added here. -->
+      </tbody>
+    </table>
+    <script>
+      "use strict";
+
+      const _BASE_URL = "http://localhost:3000";
+
+      const onInit = async () => {
+        await onClick();
+      };
+
+      const onClick = async () => {
+        try {
+          const token = localStorage.getItem("access_token");
+
+          const res = await fetch(`${_BASE_URL}/notebook/notes`, {
+            method: "GET",
+            headers: { Authorization: "Bearer " + token },
+          });
+
+          const data = await res.json();
+
+          if (!res.ok) {
+            alert(JSON.stringify(data));
+            return;
+          }
+
+          const notes = data.entity;
+
+          let i = 1;
+          notes.forEach((note) => addRow(note, i++));
+        } catch (err) {
+          console.error(err);
+        }
+      };
+
+      const addRow = (note, i) => {
+        const table = document
+          .getElementById("table")
+          .getElementsByTagName("tbody")[0];
+
+        const row = table.insertRow(table.rows.length);
+
+        row.insertCell(0).innerHTML = i;
+        row.insertCell(1).innerHTML = note._id;
+        row.insertCell(2).innerHTML = note.title;
+        row.insertCell(3).innerHTML = note.content;
+        row.insertCell(4).innerHTML = note.owner;
+      };
+
+      onInit();
+    </script>
+  </body>
+</html>
