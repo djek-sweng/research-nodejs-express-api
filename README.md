@@ -17,7 +17,7 @@ Backend (server):
 - Compression
 - Input Validation
 - Pagination
-- Morgan (Requst Logging)
+- Morgan (Request Logging)
 - Helmet (Secure Header)
 - CORS Headers
 - dotenv
