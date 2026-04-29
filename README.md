@@ -23,7 +23,7 @@ Backend (server):
 - dotenv
 - Mocha Tests
 
-Frontent (client):
+Frontend (client):
 
 - [Minimal Client](./src/client/minimal/index.html)
 - [Postman Client](./src/client/postman/research-nodejs-express-api.postman_collection.json)
